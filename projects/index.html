@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我的项目 · Clock Plus</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <style>
+    /* === 复用首页风格，保持统一 === */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0f0f1a;
+      color: #e0e0e0;
+      min-height: 100vh;
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* 毛玻璃主卡片，更宽一些以容纳项目列表 */
+    .glass-card {
+      max-width: 800px;
+      width: 100%;
+      padding: 3rem 2.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(12px) saturate(180%);
+      -webkit-backdrop-filter: blur(12px) saturate(180%);
+      border-radius: 48px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.8);
+      margin-bottom: 2rem;
+    }
+
+    h1 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.25rem;
+      background: linear-gradient(to right, #f0f0ff, #b7b7ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .subhead {
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 2.5rem;
+      font-size: 1.05rem;
+    }
+
+    /* 项目列表项 - 卡片风格 */
+    .project-item {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      padding: 1.5rem 1.8rem;
+      margin-bottom: 1.2rem;
+      transition: all 0.25s ease;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .project-item:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(167, 139, 250, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px -10px rgba(0, 0, 0, 0.5);
+    }
+
+    .project-info {
+      flex: 1 1 200px;
+    }
+
+    .project-info h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+      color: #f0f0ff;
+    }
+
+    .project-info p {
+      font-size: 0.95rem;
+      color: rgba(255, 255, 255, 0.55);
+      margin: 0;
+    }
+
+    .project-tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      background: rgba(106, 90, 205, 0.25);
+      color: #a78bfa;
+      padding: 0.2rem 0.8rem;
+      border-radius: 20px;
+      border: 1px solid rgba(106, 90, 205, 0.2);
+      margin-top: 0.4rem;
+    }
+
+    .project-link {
+      color: #a78bfa;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.4rem 1.2rem;
+      border: 1px solid rgba(167, 139, 250, 0.2);
+      border-radius: 40px;
+      transition: all 0.2s ease;
+      font-size: 0.9rem;
+      white-space: nowrap;
+    }
+
+    .project-link:hover {
+      background: rgba(167, 139, 250, 0.15);
+      border-color: #a78bfa;
+    }
+
+    /* 返回首页按钮 */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: rgba(255, 255, 255, 0.6);
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.6rem 1.5rem;
+      border-radius: 40px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.2s ease;
+    }
+
+    .back-link:hover {
+      background: rgba(255, 255, 255, 0.06);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* 响应式 */
+    @media (max-width: 600px) {
+      .glass-card {
+        padding: 2rem 1.2rem;
+        border-radius: 32px;
+      }
+      h1 {
+        font-size: 1.8rem;
+      }
+      .project-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.8rem;
+      }
+      .project-link {
+        align-self: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="glass-card">
+    <h1>📂 我的项目</h1>
+    <p class="subhead">一些正在构建和探索的东西</p>
+
+    <!-- 项目 1 -->
+    <div class="project-item">
+      <div class="project-info">
+        <h3>个人启动页</h3>
+        <p>一个带有动态粒子背景和毛玻璃效果的品牌页</p>
+        <span class="project-tag">HTML / CSS / Canvas</span>
+      </div>
+      <a href="/" class="project-link">查看 →</a>
+    </div>
+
+    <!-- 项目 2 -->
+    <div class="project-item">
+      <div class="project-info">
+        <h3>（你的下一个项目）</h3>
+        <p>这里可以放你的第二个项目描述</p>
+        <span class="project-tag">标签</span>
+      </div>
+      <a href="#" class="project-link">查看 →</a>
+    </div>
+
+    <!-- 项目 3 （可复制更多）-->
+    <div class="project-item">
+      <div class="project-info">
+        <h3>（你的第三个项目）</h3>
+        <p>简单介绍这个项目是做什么的</p>
+        <span class="project-tag">标签</span>
+      </div>
+      <a href="#" class="project-link">查看 →</a>
+    </div>
+
+  </div>
+
+  <!-- 返回首页 -->
+  <a href="/" class="back-link">← 返回首页</a>
+
+</body>
+</html>
