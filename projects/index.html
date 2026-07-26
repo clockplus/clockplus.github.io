@@ -9,11 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet">
   <style>
     /* === 全局 === */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -26,7 +22,7 @@
       align-items: center;
     }
 
-    /* === 板块一：项目列表（毛玻璃卡片） === */
+    /* === 板块一：项目列表 === */
     .glass-card {
       max-width: 800px;
       width: 100%;
@@ -77,22 +73,9 @@
       box-shadow: 0 8px 25px -10px rgba(0, 0, 0, 0.5);
     }
 
-    .project-info {
-      flex: 1 1 200px;
-    }
-
-    .project-info h3 {
-      font-size: 1.2rem;
-      font-weight: 600;
-      margin-bottom: 0.3rem;
-      color: #f0f0ff;
-    }
-
-    .project-info p {
-      font-size: 0.95rem;
-      color: rgba(255, 255, 255, 0.55);
-      margin: 0;
-    }
+    .project-info { flex: 1 1 200px; }
+    .project-info h3 { font-size: 1.2rem; font-weight: 600; margin-bottom: 0.3rem; color: #f0f0ff; }
+    .project-info p { font-size: 0.95rem; color: rgba(255, 255, 255, 0.55); margin: 0; }
 
     .project-tag {
       display: inline-block;
@@ -119,15 +102,9 @@
       font-size: 0.9rem;
       white-space: nowrap;
     }
+    .project-link:hover { background: rgba(167, 139, 250, 0.15); border-color: #a78bfa; }
 
-    .project-link:hover {
-      background: rgba(167, 139, 250, 0.15);
-      border-color: #a78bfa;
-    }
-
-    /* =============================================
-       板块二：图片展示柜（独立毛玻璃卡片）
-       ============================================= */
+    /* === 板块二：图片展示柜 === */
     .gallery-card {
       max-width: 800px;
       width: 100%;
@@ -161,10 +138,18 @@
       margin-top: 0.2rem;
     }
 
+    .gallery-header .count {
+      display: inline-block;
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.3);
+      margin-top: 0.3rem;
+    }
+
     .gallery-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
       gap: 16px;
+      min-height: 100px;
     }
 
     .gallery-item {
@@ -192,9 +177,7 @@
       transition: transform 0.4s ease;
     }
 
-    .gallery-item:hover img {
-      transform: scale(1.05);
-    }
+    .gallery-item:hover img { transform: scale(1.05); }
 
     .gallery-item .overlay {
       position: absolute;
@@ -204,36 +187,42 @@
       padding: 1rem 0.8rem 0.8rem;
       background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
       color: #fff;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       font-weight: 500;
       transform: translateY(100%);
       transition: transform 0.3s ease;
       text-align: center;
     }
 
-    .gallery-item:hover .overlay {
-      transform: translateY(0);
-    }
-
+    .gallery-item:hover .overlay { transform: translateY(0); }
     .gallery-item .overlay small {
       display: block;
       font-weight: 400;
-      font-size: 0.65rem;
-      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.6rem;
+      color: rgba(255, 255, 255, 0.5);
     }
 
-    .empty-state {
+    /* 加载 & 空状态 */
+    .loading-state, .empty-state {
       text-align: center;
       padding: 2.5rem 1rem;
       color: rgba(255, 255, 255, 0.4);
       grid-column: 1 / -1;
     }
-    .empty-state .icon {
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
+    .loading-state .spinner {
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      border: 3px solid rgba(255, 255, 255, 0.1);
+      border-top: 3px solid #a78bfa;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 0.8rem;
     }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    .empty-state .icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
 
-    /* ===== 灯箱 ===== */
+    /* === 灯箱 === */
     .lightbox {
       display: none;
       position: fixed;
@@ -250,10 +239,7 @@
       padding: 2rem;
       cursor: pointer;
     }
-
-    .lightbox.active {
-      display: flex;
-    }
+    .lightbox.active { display: flex; }
 
     .lightbox img {
       max-width: 90vw;
@@ -263,11 +249,7 @@
       box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8);
       animation: zoomIn 0.3s ease;
     }
-
-    @keyframes zoomIn {
-      0% { transform: scale(0.9); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
-    }
+    @keyframes zoomIn { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
     .lightbox .close-hint {
       position: absolute;
@@ -280,7 +262,7 @@
       pointer-events: none;
     }
 
-    /* ===== 返回首页 ===== */
+    /* === 返回首页 === */
     .back-link {
       display: inline-flex;
       align-items: center;
@@ -293,45 +275,22 @@
       border: 1px solid rgba(255, 255, 255, 0.1);
       transition: all 0.2s ease;
     }
+    .back-link:hover { background: rgba(255, 255, 255, 0.06); color: #fff; border-color: rgba(255, 255, 255, 0.2); }
 
-    .back-link:hover {
-      background: rgba(255, 255, 255, 0.06);
-      color: #fff;
-      border-color: rgba(255, 255, 255, 0.2);
-    }
-
-    /* ===== 响应式 ===== */
+    /* === 响应式 === */
     @media (max-width: 600px) {
-      .glass-card, .gallery-card {
-        padding: 1.8rem 1.2rem;
-        border-radius: 32px;
-      }
-      h1 {
-        font-size: 1.8rem;
-      }
-      .gallery-header h2 {
-        font-size: 1.5rem;
-      }
-      .project-item {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.8rem;
-      }
-      .project-link {
-        align-self: flex-start;
-      }
-      .gallery-grid {
-        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-        gap: 10px;
-      }
+      .glass-card, .gallery-card { padding: 1.8rem 1.2rem; border-radius: 32px; }
+      h1 { font-size: 1.8rem; }
+      .gallery-header h2 { font-size: 1.5rem; }
+      .project-item { flex-direction: column; align-items: flex-start; gap: 0.8rem; }
+      .project-link { align-self: flex-start; }
+      .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- =============================================
-       板块一：项目列表
-       ============================================= -->
+  <!-- ===== 板块一：项目列表 ===== -->
   <div class="glass-card">
     <h1>📂 我的项目</h1>
     <p class="subhead">一些正在构建和探索的东西</p>
@@ -364,17 +323,19 @@
     </div>
   </div>
 
-  <!-- =============================================
-       板块二：图片展示柜
-       ============================================= -->
+  <!-- ===== 板块二：图片展示柜（自动读取仓库图片） ===== -->
   <div class="gallery-card">
     <div class="gallery-header">
       <h2>🖼️ 图片展示柜</h2>
-      <p>点击图片放大查看</p>
+      <p>自动读取仓库中的图片 · 点击放大</p>
+      <span class="count" id="imageCount">加载中...</span>
     </div>
 
     <div class="gallery-grid" id="galleryGrid">
-      <!-- 由 JavaScript 动态生成 -->
+      <div class="loading-state">
+        <div class="spinner"></div>
+        <p>正在扫描仓库图片...</p>
+      </div>
     </div>
   </div>
 
@@ -389,67 +350,124 @@
 
   <script>
     // =============================================
-    // 1. 图片列表 —— 在这里添加你的图片
+    // 配置 —— 改这里！
     // =============================================
-    const images = [
-      // 示例图片（换成你自己的）
-      // { src: '/bg.jpg', title: '背景图', desc: '主页背景' },
-      // { src: '/photo1.jpg', title: '照片 1', desc: '生活记录' },
-      // { src: '/screenshot1.png', title: '截图 1', desc: '项目预览' },
-    ];
+    const GITHUB_USERNAME = 'clockplus';
+    const GITHUB_REPO = 'clockplus.github.io';
+    // 扫描哪个文件夹（留空 = 根目录）
+    const SCAN_FOLDER = '';  // 例如 'images/' 或 'photos/'
+
+    // 支持的图片格式
+    const IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
 
     // =============================================
-    // 2. 渲染图片网格
+    // 核心逻辑
     // =============================================
     const grid = document.getElementById('galleryGrid');
+    const countEl = document.getElementById('imageCount');
 
-    if (images.length === 0) {
-      grid.innerHTML = `
-        <div class="empty-state">
-          <div class="icon">📭</div>
-          <p>还没有图片</p>
-          <p style="font-size:0.8rem;margin-top:0.3rem;">在 images 数组里添加图片链接</p>
-        </div>
-      `;
-    } else {
-      grid.innerHTML = images.map((img, index) => `
-        <div class="gallery-item" data-index="${index}">
-          <img src="${img.src}" alt="${img.title}" loading="lazy" />
-          <div class="overlay">
-            ${img.title}
-            <small>${img.desc || ''}</small>
+    async function fetchImages() {
+      try {
+        const apiUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/${SCAN_FOLDER}`;
+        const response = await fetch(apiUrl);
+
+        if (!response.ok) {
+          throw new Error(`GitHub API 请求失败: ${response.status}`);
+        }
+
+        const files = await response.json();
+
+        // 过滤出图片文件
+        const imageFiles = files.filter(file => {
+          if (file.type !== 'file') return false;
+          const ext = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
+          return IMAGE_EXTENSIONS.includes(ext);
+        });
+
+        // 按名称排序
+        imageFiles.sort((a, b) => a.name.localeCompare(b.name));
+
+        countEl.textContent = `共 ${imageFiles.length} 张图片`;
+
+        if (imageFiles.length === 0) {
+          grid.innerHTML = `
+            <div class="empty-state">
+              <div class="icon">📭</div>
+              <p>仓库中还没有图片</p>
+              <p style="font-size:0.8rem;margin-top:0.3rem;">上传图片到仓库根目录即可自动显示</p>
+            </div>
+          `;
+          return;
+        }
+
+        // 渲染图片
+        grid.innerHTML = imageFiles.map((file) => {
+          // 图片文件名作为标题（去掉扩展名）
+          const title = file.name.replace(/\.[^.]+$/, '');
+          return `
+            <div class="gallery-item" data-src="${file.download_url}">
+              <img src="${file.download_url}" alt="${title}" loading="lazy" />
+              <div class="overlay">
+                ${title}
+                <small>${file.name}</small>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        // 绑定灯箱事件
+        bindLightbox();
+
+      } catch (error) {
+        console.error('加载图片失败:', error);
+        grid.innerHTML = `
+          <div class="empty-state">
+            <div class="icon">⚠️</div>
+            <p>加载失败</p>
+            <p style="font-size:0.8rem;margin-top:0.3rem;">${error.message}</p>
+            <p style="font-size:0.7rem;margin-top:0.5rem;color:rgba(255,255,255,0.3);">
+              请确保仓库是公开的，且文件名没有特殊字符
+            </p>
           </div>
-        </div>
-      `).join('');
+        `;
+        countEl.textContent = '加载失败';
+      }
     }
 
     // =============================================
-    // 3. 灯箱功能
+    // 灯箱功能
     // =============================================
-    const lightbox = document.getElementById('lightbox');
-    const lightboxImg = document.getElementById('lightboxImg');
+    function bindLightbox() {
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImg = document.getElementById('lightboxImg');
 
-    document.querySelectorAll('.gallery-item').forEach((item) => {
-      item.addEventListener('click', () => {
-        const img = item.querySelector('img');
-        lightboxImg.src = img.src;
-        lightboxImg.alt = img.alt;
-        lightbox.classList.add('active');
-        document.body.style.overflow = 'hidden';
+      document.querySelectorAll('.gallery-item').forEach((item) => {
+        item.addEventListener('click', () => {
+          const img = item.querySelector('img');
+          lightboxImg.src = img.src;
+          lightboxImg.alt = img.alt;
+          lightbox.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        });
       });
-    });
 
-    lightbox.addEventListener('click', () => {
-      lightbox.classList.remove('active');
-      document.body.style.overflow = '';
-    });
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
+      lightbox.addEventListener('click', () => {
         lightbox.classList.remove('active');
         document.body.style.overflow = '';
-      }
-    });
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          lightbox.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+      });
+    }
+
+    // =============================================
+    // 启动
+    // =============================================
+    fetchImages();
   </script>
 
 </body>
