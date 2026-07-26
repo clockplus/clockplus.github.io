@@ -1,9 +1,396 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-    <title>我的GitHub Page</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clock Plus · 个人空间</title>
+  <!-- 使用 Google Font 提升字体质感 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <style>
+    /* 全局重置与基础 */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0f0f1a;  /* 深邃暗色基底 */
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;     /* 隐藏滚动条，保持全屏沉浸 */
+      position: relative;
+    }
+
+    /* ---- 1. 动态粒子画布 (背景) ---- */
+    #particles-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none; /* 让鼠标事件穿透，不影响点击卡片 */
+    }
+
+    /* ---- 2. 主卡片 (玻璃态 + 视差悬浮) ---- */
+    .glass-card {
+      position: relative;
+      z-index: 10;
+      max-width: 640px;
+      width: 90%;
+      padding: 3rem 2.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(12px) saturate(180%);
+      -webkit-backdrop-filter: blur(12px) saturate(180%);
+      border-radius: 48px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      text-align: center;
+      transition: transform 0.2s ease-out, box-shadow 0.3s ease;
+      /* 让卡片本身有一点微弱的悬浮感 */
+      transform: translateY(0px);
+    }
+
+    /* 鼠标移上卡片时，增加光感 */
+    .glass-card:hover {
+      box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+
+    /* 头像/标志 */
+    .avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6a5acd, #00b4d8);
+      margin: 0 auto 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.2rem;
+      font-weight: 700;
+      color: white;
+      box-shadow: 0 12px 30px -8px rgba(106, 90, 205, 0.4);
+      user-select: none;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    /* 标题与描述 */
+    h1 {
+      font-size: 2.6rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(to right, #f0f0ff, #b7b7ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .subhead {
+      font-size: 1.1rem;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 2rem;
+      letter-spacing: 0.3px;
+    }
+
+    .subhead span {
+      color: #a78bfa;
+      font-weight: 500;
+    }
+
+    /* 分割装饰线 */
+    .divider {
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, #6a5acd, #00b4d8);
+      margin: 0 auto 2rem;
+      border-radius: 10px;
+    }
+
+    /* 社交/链接按钮组 - 高级网格 */
+    .link-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      justify-content: center;
+      margin-bottom: 2.2rem;
+    }
+
+    .link-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 28px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 60px;
+      color: #f0f0ff;
+      font-weight: 500;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      backdrop-filter: blur(4px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      flex: 1 0 auto;       /* 自适应宽度 */
+      justify-content: center;
+      min-width: 130px;
+    }
+
+    .link-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(167, 139, 250, 0.5);
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 12px 25px -8px rgba(0, 0, 0, 0.5);
+    }
+
+    .link-btn i {
+      font-size: 1.2rem;
+      opacity: 0.9;
+    }
+
+    /* 脚注 - 状态指示器 */
+    .status {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .status-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #4ade80;
+      animation: pulse-dot 2s infinite;
+    }
+
+    @keyframes pulse-dot {
+      0% { opacity: 0.4; transform: scale(0.9); }
+      50% { opacity: 1; transform: scale(1.2); }
+      100% { opacity: 0.4; transform: scale(0.9); }
+    }
+
+    /* ---- 响应式细节 ---- */
+    @media (max-width: 480px) {
+      .glass-card {
+        padding: 2rem 1.5rem;
+        border-radius: 32px;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+      .avatar {
+        width: 80px;
+        height: 80px;
+        font-size: 2.6rem;
+      }
+      .link-btn {
+        min-width: 110px;
+        padding: 10px 18px;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
 </head>
 <body>
-    <h1>你好，世界！这是我的免费网页。</h1>
+
+  <!-- 粒子背景容器 -->
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- 主卡片 -->
+  <main class="glass-card" id="card">
+    <!-- 头像 (可替换为你的首字母或Emoji) -->
+    <div class="avatar">⏰</div>
+
+    <h1>Clock Plus</h1>
+    <p class="subhead">
+      探索 · 创造 · <span>无限可能</span>
+    </p>
+
+    <div class="divider"></div>
+
+    <!-- 链接区：换成你的真实链接 -->
+    <div class="link-grid">
+      <a href="#" class="link-btn" target="_blank">
+        <span>📂</span> 项目
+      </a>
+      <a href="#" class="link-btn" target="_blank">
+        <span>🐙</span> GitHub
+      </a>
+      <a href="#" class="link-btn" target="_blank">
+        <span>📝</span> 博客
+      </a>
+      <a href="#" class="link-btn" target="_blank">
+        <span>💬</span> 联系
+      </a>
+    </div>
+
+    <!-- 状态栏 -->
+    <div class="status">
+      <span class="status-dot"></span>
+      目前在线 · 欢迎交流
+    </div>
+  </main>
+
+  <script>
+    (function() {
+      // ---------- 1. 粒子背景动画 ----------
+      const canvas = document.getElementById('particles-canvas');
+      const ctx = canvas.getContext('2d');
+      let width, height;
+      let particles = [];
+
+      const PARTICLE_COUNT = 90;
+      const CONNECTION_DIST = 150;
+
+      // 颜色配置 (紫蓝色系)
+      const colors = [
+        'rgba(106, 90, 205, 0.7)',
+        'rgba(0, 180, 216, 0.6)',
+        'rgba(167, 139, 250, 0.5)',
+        'rgba(255, 255, 255, 0.25)'
+      ];
+
+      function initCanvas() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+      }
+
+      class Particle {
+        constructor() {
+          this.x = Math.random() * width;
+          this.y = Math.random() * height;
+          this.vx = (Math.random() - 0.5) * 0.5;
+          this.vy = (Math.random() - 0.5) * 0.5;
+          this.radius = Math.random() * 2.2 + 1.2;
+          this.color = colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        update() {
+          this.x += this.vx;
+          this.y += this.vy;
+
+          // 边界柔和反弹 (防止跑出视野)
+          if (this.x < 0 || this.x > width) this.vx *= -1;
+          if (this.y < 0 || this.y > height) this.vy *= -1;
+        }
+
+        draw() {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+          ctx.fillStyle = this.color;
+          ctx.fill();
+        }
+      }
+
+      function initParticles() {
+        particles = [];
+        for (let i = 0; i < PARTICLE_COUNT; i++) {
+          particles.push(new Particle());
+        }
+      }
+
+      function drawLines() {
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < CONNECTION_DIST) {
+              // 距离越近，线条越亮越实
+              const opacity = 1 - (dist / CONNECTION_DIST);
+              ctx.beginPath();
+              ctx.moveTo(particles[i].x, particles[i].y);
+              ctx.lineTo(particles[j].x, particles[j].y);
+              ctx.strokeStyle = `rgba(167, 139, 250, ${opacity * 0.35})`;
+              ctx.lineWidth = 0.6;
+              ctx.stroke();
+            }
+          }
+        }
+      }
+
+      function animateParticles() {
+        ctx.clearRect(0, 0, width, height);
+
+        particles.forEach(p => {
+          p.update();
+          p.draw();
+        });
+
+        drawLines();
+        requestAnimationFrame(animateParticles);
+      }
+
+      // 窗口resize重置
+      function handleResize() {
+        initCanvas();
+        initParticles(); // 重置粒子位置适应新尺寸
+      }
+
+      // ---------- 2. 鼠标视差效果 (卡片跟随) ----------
+      const card = document.getElementById('card');
+      let mouseX = 0, mouseY = 0;
+      let currentX = 0, currentY = 0;
+
+      function handleMouseMove(e) {
+        // 获取鼠标在视口中的归一化坐标 (-1 到 1)
+        mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+        mouseY = (e.clientY / window.innerHeight) * 2 - 1;
+      }
+
+      // 平滑动画循环 (让卡片移动更柔和)
+      function animateCard() {
+        // 缓动系数 (0.08 让移动更顺滑)
+        currentX += (mouseX - currentX) * 0.08;
+        currentY += (mouseY - currentY) * 0.08;
+
+        // 最大偏移幅度 (10px 左右，防止过于夸张)
+        const maxOffset = 12;
+        const offsetX = currentX * maxOffset;
+        const offsetY = currentY * maxOffset;
+
+        card.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+
+        requestAnimationFrame(animateCard);
+      }
+
+      // ---------- 3. 启动一切 ----------
+      function init() {
+        initCanvas();
+        initParticles();
+        animateParticles();
+
+        // 鼠标监听
+        window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('resize', handleResize);
+
+        // 启动卡片视差
+        animateCard();
+      }
+
+      // 等DOM完全加载后启动
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+
+    })();
+  </script>
 </body>
 </html>
