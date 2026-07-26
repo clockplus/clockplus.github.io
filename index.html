@@ -16,7 +16,7 @@
 
     :root {
       --bg-primary: #0b0b12;
-      --bg-card: rgba(255, 255, 255, 0.04);
+      --bg-card: rgba(255, 255, 255, 0.022);
       --border-card: rgba(255, 255, 255, 0.08);
       --text-primary: #f0f0ff;
       --text-secondary: rgba(255, 255, 255, 0.55);
@@ -42,7 +42,7 @@
       /* 背景图片 + 纯色兜底 */
       background: url('/bg.jpg'), #0b0b12;
       background-size: cover, cover;
-      background-blend-mode: screen;
+      background-blend-mode: overlay;
       background-position: center, center;
       background-repeat: no-repeat, no-repeat;
       /* 固定背景，滚动时不移动 */
@@ -244,7 +244,7 @@
       width: 100%;
       padding: 2.8rem 2.5rem 2rem;
       background: var(--bg-card);
-      backdrop-filter: blur(16px) saturate(180%);
+      backdrop-filter: blur(8px) saturate(110%);
       -webkit-backdrop-filter: blur(16px) saturate(180%);
       border-radius: var(--radius-card);
       border: 1px solid var(--border-card);
